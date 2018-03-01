@@ -39,16 +39,7 @@ namespace hashcode_mad
             {
                 var line = lines[i].Split(' ');
 
-                yield return new Ride
-                {
-                    Id = i,
-                    StartX = int.Parse(line[0]),
-                    StartY = int.Parse(line[1]),
-                    EndX = int.Parse(line[2]),
-                    EndY = int.Parse(line[3]),
-                    Start = int.Parse(line[4]),
-                    End = int.Parse(line[5])
-                };
+                yield return new Ride(id: i, startX: int.Parse(line[0]), startY: int.Parse(line[1]), endX: int.Parse(line[2]), endY: int.Parse(line[3]), start: int.Parse(line[4]), end: int.Parse(line[5]));
             }
         }
     }

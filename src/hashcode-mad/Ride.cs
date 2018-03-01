@@ -1,20 +1,35 @@
-﻿namespace hashcode_mad
+﻿using System;
+
+namespace hashcode_mad
 {
     internal class Ride
     {
-        public int Id { get; set; }
+        public Ride(int id, int startX, int startY, int endX, int endY, int start, int end)
+        {
+            this.Id = id;
+            this.StartX = startX;
+            this.StartY = startY;
+            this.EndX = endX;
+            this.EndY = endY;
+            this.Start = start;
+            this.End = end;
 
-        public int StartX { get; set; }
+            this.Distance = this.GetManhattanDistance(this.StartX, this.EndX, this.StartY, this.EndY);
+        }
 
-        public int StartY { get; set; }
+        public int Id { get; }
 
-        public int EndX { get; set; }
+        public int StartX { get; }
 
-        public int EndY { get; set; }
+        public int StartY { get; }
 
-        public int Start { get; set; }
+        public int EndX { get; }
 
-        public int End { get; set; }
+        public int EndY { get; }
+
+        public int Start { get; }
+
+        public int End { get; }
 
         public override string ToString()
         {
