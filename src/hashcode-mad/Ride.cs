@@ -31,9 +31,16 @@ namespace hashcode_mad
 
         public int End { get; }
 
+        public int Distance { get; }
+
         public override string ToString()
         {
             return $"Id: {Id}, StartX: {StartX}, StartY: {StartY}, EndX: {EndX}, EndY: {EndY}, Start: {Start}, End: {End}";
+        }
+
+        public int GetManhattanDistance(int startX, int endX, int startY, int endY)
+        {
+            return Math.Abs(startX - endX) + Math.Abs(startY - endY);
         }
     }
 }
