@@ -13,13 +13,29 @@ namespace hashcode_mad
         {
             for (int i = 0; i < inputs.Length; i++)
             {
-                ParseInput(i);
+                var vehicles1 = ParseInput(i, 1);
+                var score1 = vehicles1.Sum(v => v.Score);
+
+                var vehicles2 = ParseInput(i, 2);
+                var score2 = vehicles2.Sum(v => v.Score);
+
+                Console.WriteLine($"Score1: {score1}");
+                Console.WriteLine($"Score2: {score2}");
+
+                List<Vehicle> vehicles = null;
+                if (vehicles1.Sum(v => v.Score) > vehicles2.Sum(v => v.Score))
+                    vehicles = vehicles1;
+                else
+                    vehicles = vehicles2;
+
+                var outputBuilder = new OutputBuilder(vehicles);
+                outputBuilder.Build(@"output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
             }
 
             Console.Read();
         }
 
-        private static void ParseInput(int index)
+        private static List<Vehicle> ParseInput(int index, int run)
         {
             var lines = File.ReadAllLines(inputs[index]);
 
@@ -28,11 +44,10 @@ namespace hashcode_mad
             Console.WriteLine(simulation);
 
             var rides = GetRides(lines);
-
-            var vehicles = simulation.Run(rides);
-
-            var outputBuilder = new OutputBuilder(vehicles);
-            outputBuilder.Build(@"output\" + Path.GetFileName(inputs[index]).Replace(".in", ".out"));
+            if (run == 1)
+                return simulation.Run1(rides).ToList();
+            else
+                return simulation.Run2(rides).ToList();
         }
 
         private static Simulation GetSimulation(string[] lines)

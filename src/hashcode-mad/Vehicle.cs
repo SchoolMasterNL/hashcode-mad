@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace hashcode_mad
@@ -7,19 +8,40 @@ namespace hashcode_mad
     internal class Vehicle
     {
         private List<Ride> rides;
+        private int addedSteps;
+        private int bonus;
 
-        public Vehicle(int id)
+        public Vehicle(int id, int bonus)
         {
             Id = id;
             rides = new List<Ride>();
+
+            addedSteps = 0;
+            this.bonus = bonus;
+            Score = 0;
         }
 
         public IEnumerable<Ride> Rides => rides;
 
         public int Id { get; }
 
+        public int CurrentStep => rides.Sum(r => r.Distance) + addedSteps;
+
+        public int Score { get; set; }
+
         public void AssignRide(Ride ride)
         {
+            this.addedSteps += GetDistance(ride);
+
+            if (CurrentStep  <= ride.Start)
+            {
+                this.addedSteps += ride.Start - CurrentStep;
+
+                Score += bonus;
+            }
+
+            Score += ride.Distance;
+
             rides.Add(ride);
         }
 

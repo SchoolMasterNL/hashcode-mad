@@ -27,9 +27,9 @@ namespace hashcode_mad
 
         public int Steps { get; }
 
-        public IEnumerable<Vehicle> Run(IEnumerable<Ride> input)
+        public IEnumerable<Vehicle> Run1(IEnumerable<Ride> input)
         {
-            var result = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index)).ToList();
+            var result = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
             var rides = input.ToList();
 
             foreach (var vehicle in result)
@@ -69,6 +69,29 @@ namespace hashcode_mad
             }
 
             return result;
+        }
+
+        public IEnumerable<Vehicle> Run2(IEnumerable<Ride> input)
+        {
+            var vehicles = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
+            var rides = input.ToList();
+
+            foreach (var ride in rides)
+            {
+                // Short the vehicles by closest to this ride.
+                var bestVehicles = vehicles.OrderBy(v => v.GetDistance(ride));
+                foreach (var vehicle in bestVehicles)
+                {
+                    int total = vehicle.CurrentStep + (vehicle.GetDistance(ride) + ride.Distance);
+                    if (total >= ride.End)
+                        continue;
+
+                    vehicle.AssignRide(ride);
+                    break;
+                }
+
+            }
+            return vehicles;
         }
 
         public override string ToString()
