@@ -23,7 +23,13 @@ namespace hashcode_mad
 
             var index = (int)key.Key - 48;
 
-            foreach (var ride in GetRides(inputs[index]))
+            var lines = File.ReadAllLines(inputs[index]);
+
+            var simulation = GetSimulation(lines);
+
+            Console.WriteLine(simulation);
+
+            foreach (var ride in GetRides(lines))
             {
                 Console.WriteLine(ride.ToString());
             }
@@ -31,11 +37,16 @@ namespace hashcode_mad
             Console.Read();
         }
 
-        private static IEnumerable<Ride> GetRides(string path)
+        private static Simulation GetSimulation(string[] lines)
         {
-            var lines = File.ReadAllLines(path);
+            var line = lines[0].Split(' ');
 
-            for (var i = 0; i < lines.Length; i++)
+            return new Simulation(rows: int.Parse(line[0]), columns: int.Parse(line[1]), vehicles: int.Parse(line[2]), rides: int.Parse(line[3]), bonus: int.Parse(line[4]), steps: int.Parse(line[5]));
+        }
+
+        private static IEnumerable<Ride> GetRides(string[] lines)
+        {
+            for (var i = 1; i < lines.Length; i++)
             {
                 var line = lines[i].Split(' ');
 
