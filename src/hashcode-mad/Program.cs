@@ -11,36 +11,28 @@ namespace hashcode_mad
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Which input:");
-
-            for (var i = 0; i < inputs.Length; i++)
+            for (int i = 0; i < inputs.Length; i++)
             {
-                Console.WriteLine($"{i}: {inputs[i]}");
+                ParseInput(i);
             }
 
-            var key = Console.ReadKey();
+            Console.Read();
+        }
 
-            Console.WriteLine();
-
-            var index = (int)key.Key - 48;
-
+        private static void ParseInput(int index)
+        {
             var lines = File.ReadAllLines(inputs[index]);
 
             var simulation = GetSimulation(lines);
 
             Console.WriteLine(simulation);
 
-            foreach (var ride in GetRides(lines))
-            {
-                Console.WriteLine(ride.ToString());
-            }
+            var rides = GetRides(lines);
 
-            var vehicles = simulation.Run();
+            var vehicles = simulation.Run(rides);
 
             var outputBuilder = new OutputBuilder(vehicles);
             outputBuilder.Build(@"output\" + Path.GetFileName(inputs[index]).Replace(".in", ".out"));
-
-            Console.Read();
         }
 
         private static Simulation GetSimulation(string[] lines)
@@ -60,7 +52,7 @@ namespace hashcode_mad
                     .Select(value => int.Parse(value))
                     .ToArray();
 
-                yield return new Ride(id: i, startX: values[0], startY: values[1], endX: values[2], endY: values[3], start: values[4], end: values[5]);
+                yield return new Ride(id: i - 1, startX: values[0], startY: values[1], endX: values[2], endY: values[3], start: values[4], end: values[5]);
             }
         }
     }

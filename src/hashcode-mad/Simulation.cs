@@ -27,12 +27,48 @@ namespace hashcode_mad
 
         public int Steps { get; }
 
-        public IEnumerable<Vehicle> Run()
+        public IEnumerable<Vehicle> Run(IEnumerable<Ride> input)
         {
-            for (int i = 0; i < Vehicles; i++)
+            var result = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index)).ToList();
+            var rides = input.ToList();
+
+            foreach (var vehicle in result)
             {
-                yield return new Vehicle(i + 1);
+                var currentStep = 0;
+                foreach (var ride in rides)
+                {
+                    var bestRide = (Ride)null;
+
+                    // Can we finish in time?
+                    var totalTime = vehicle.GetDistance(ride) + ride.Distance;
+                    if ((totalTime + currentStep) >= ride.End)
+                    {
+                        continue;
+                    }
+
+                    // Longer ride?
+                    if (bestRide == null || ride.Distance > bestRide.Distance)
+                    {
+                        bestRide = ride;
+                    }
+                    else if (ride.Distance == bestRide.Distance)
+                    {
+                        // Can we start in time?
+                        if ((currentStep + vehicle.GetDistance(ride)) == ride.Start)
+                        {
+                            // We can make it in time! Bonus points
+                            bestRide = ride;
+                        }
+                    }
+
+                    vehicle.AssignRide(bestRide);
+                    currentStep += totalTime;
+                }
+
+                rides = rides.Except(vehicle.Rides).ToList();
             }
+
+            return result;
         }
 
         public override string ToString()
