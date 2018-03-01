@@ -10,7 +10,7 @@ namespace hashcode_mad
 
         public OutputBuilder(IEnumerable<Vehicle> vehicles)
         {
-            this.vehicles = vehicles.Where(v => v.Rides.Count() > 0).ToList();
+            this.vehicles = vehicles.ToList();
         }
 
         public void Build(string fileName)
@@ -21,7 +21,6 @@ namespace hashcode_mad
                 {
                     for (int i = 0; i < vehicles.Count; i++)
                     {
-
                         if (i > 0)
                             writer.WriteLine();
 
