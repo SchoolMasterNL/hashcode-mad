@@ -35,6 +35,11 @@ namespace hashcode_mad
                 Console.WriteLine(ride.ToString());
             }
 
+            var vehicles = simulation.Run();
+
+            var outputBuilder = new OutputBuilder(vehicles);
+            outputBuilder.Build(@"output\" + Path.GetFileName(inputs[index]).Replace(".in", ".out"));
+
             Console.Read();
         }
 

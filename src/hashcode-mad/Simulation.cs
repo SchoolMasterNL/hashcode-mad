@@ -1,4 +1,7 @@
-﻿namespace hashcode_mad
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace hashcode_mad
 {
     internal class Simulation
     {
@@ -23,6 +26,11 @@
         public int Bonus { get; }
 
         public int Steps { get; }
+
+        public IEnumerable<Vehicle> Run()
+        {
+            return Enumerable.Empty<Vehicle>();
+        }
 
         public override string ToString()
         {

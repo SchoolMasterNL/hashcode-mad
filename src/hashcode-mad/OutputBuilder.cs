@@ -18,18 +18,22 @@ namespace hashcode_mad
             {
                 using (var writer = new StreamWriter(output))
                 {
-                    int index = 0;
                     foreach (var vehicle in vehicles)
                     {
-                        writer.Write(++index);
-                        foreach (var ride in vehicle.Rides)
-                        {
-                            writer.Write(" " + ride.Id);
-                        }
-                        writer.WriteLine();
+                        WriteVehicle(writer, vehicle);
                     }
                 }
             }
+        }
+
+        private static void WriteVehicle(StreamWriter writer, Vehicle vehicle)
+        {
+            writer.Write(vehicle.Id);
+            foreach (var ride in vehicle.Rides)
+            {
+                writer.Write(" " + ride.Id);
+            }
+            writer.WriteLine();
         }
     }
 }
