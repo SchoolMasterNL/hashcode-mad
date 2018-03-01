@@ -14,6 +14,8 @@ namespace hashcode_mad
             rides = new List<Ride>();
         }
 
+        public IEnumerable<Ride> Rides => rides;
+
         public int Id { get; }
 
         public void AssignRide(Ride ride)
