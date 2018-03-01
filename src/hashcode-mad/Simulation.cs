@@ -29,7 +29,10 @@ namespace hashcode_mad
 
         public IEnumerable<Vehicle> Run()
         {
-            return Enumerable.Empty<Vehicle>();
+            for (int i = 0; i < Vehicles; i++)
+            {
+                yield return new Vehicle(i + 1);
+            }
         }
 
         public override string ToString()
