@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace hashcode_mad
 {
@@ -39,18 +40,22 @@ namespace hashcode_mad
 
         private static Simulation GetSimulation(string[] lines)
         {
-            var line = lines[0].Split(' ');
+            var values = lines[0].Split(' ')
+                .Select(value => int.Parse(value))
+                .ToArray();
 
-            return new Simulation(rows: int.Parse(line[0]), columns: int.Parse(line[1]), vehicles: int.Parse(line[2]), rides: int.Parse(line[3]), bonus: int.Parse(line[4]), steps: int.Parse(line[5]));
+            return new Simulation(rows: values[0], columns: values[1], vehicles: values[2], rides: values[3], bonus: values[4], steps: values[5]);
         }
 
         private static IEnumerable<Ride> GetRides(string[] lines)
         {
             for (var i = 1; i < lines.Length; i++)
             {
-                var line = lines[i].Split(' ');
+                var values = lines[i].Split(' ')
+                    .Select(value => int.Parse(value))
+                    .ToArray();
 
-                yield return new Ride(id: i, startX: int.Parse(line[0]), startY: int.Parse(line[1]), endX: int.Parse(line[2]), endY: int.Parse(line[3]), start: int.Parse(line[4]), end: int.Parse(line[5]));
+                yield return new Ride(id: i, startX: values[0], startY: values[1], endX: values[2], endY: values[3], start: values[4], end: values[5]);
             }
         }
     }
