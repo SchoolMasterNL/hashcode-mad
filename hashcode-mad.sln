@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F937190-6481-467E-9036-FB0BF4361035}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hashcode-mad", "src\hashcode-mad\hashcode-mad.csproj", "{95184B8B-02AE-4F6A-A75A-B9151265051C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95184B8B-02AE-4F6A-A75A-B9151265051C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95184B8B-02AE-4F6A-A75A-B9151265051C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95184B8B-02AE-4F6A-A75A-B9151265051C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95184B8B-02AE-4F6A-A75A-B9151265051C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{95184B8B-02AE-4F6A-A75A-B9151265051C} = {2F937190-6481-467E-9036-FB0BF4361035}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A78CC62-DDFB-4431-9D1D-A8DB57C67617}
+	EndGlobalSection
+EndGlobal
