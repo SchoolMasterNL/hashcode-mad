@@ -11,7 +11,7 @@ namespace hashcode_mad
 
         static void Main(string[] args)
         {
-            int total = 0;
+            int grandTotal = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
                 var lines = File.ReadAllLines(inputs[i]);
@@ -21,29 +21,9 @@ namespace hashcode_mad
                 Console.WriteLine(simulation);
 
                 var rides1 = GetRides(lines);
-                var vehicles1 = simulation.Run1(rides1).ToList();
-                var score1 = vehicles1.Sum(v => v.Score);
-                var bonus1 = vehicles1.Sum(v => v.Bonus);
+                (var vehicles, var total) = simulation.Run(rides1);
 
-                var rides2 = GetRides(lines);
-                var vehicles2 = simulation.Run2(rides2).ToList();
-                var score2 = vehicles2.Sum(v => v.Score);
-                var bonus2 = vehicles2.Sum(v => v.Bonus);
-
-                Console.WriteLine($"Run1= Score: {score1}, Bonus {bonus1}, Total: {score1 + bonus1}");
-                Console.WriteLine($"Run2= Score: {score2}, Bonus {bonus2}, Total: {score2 + bonus2}");
-
-                List<Vehicle> vehicles = null;
-                if (score1 + bonus1 > score2 + bonus2)
-                {
-                    vehicles = vehicles1;
-                    total += score1;
-                }
-                else
-                {
-                    vehicles = vehicles2;
-                    total += score2;
-                }
+                grandTotal += total;
 
                 var outputBuilder = new OutputBuilder(vehicles);
                 outputBuilder.Build(@"output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
@@ -51,7 +31,7 @@ namespace hashcode_mad
                 Console.WriteLine();
             }
 
-            Console.WriteLine($"{total:n0}");
+            Console.WriteLine($"{grandTotal:n0}");
             Console.Read();
         }
 

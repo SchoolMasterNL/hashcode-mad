@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace hashcode_mad
@@ -27,7 +28,38 @@ namespace hashcode_mad
 
         public int Steps { get; }
 
-        public IEnumerable<Vehicle> Run1(IEnumerable<Ride> input)
+        public (IEnumerable<Vehicle>, int) Run(IEnumerable<Ride> input)
+        {
+            var runs = new Func<IEnumerable<Ride>, IEnumerable<Vehicle>>[]
+            {
+                Run1,
+                Run2,
+                Run3,
+            };
+
+            var bestVehicles = (IEnumerable<Vehicle>)null;
+            var bestTotal = 0;
+
+            for (int i = 0; i < runs.Length; i++)
+            {
+                var vehicles = runs[i](input);
+
+                var score = vehicles.Sum(v => v.Score);
+                var bonus = vehicles.Sum(v => v.Bonus);
+                var total = score + bonus;
+
+                Console.WriteLine($"Run{i + 1}= Score: {score}, Bonus {bonus}, Total: {total}");
+                if (total > bestTotal)
+                {
+                    bestVehicles = vehicles;
+                    bestTotal = total;
+                }
+            }
+
+            return (bestVehicles, bestTotal);
+        }
+
+        private IEnumerable<Vehicle> Run1(IEnumerable<Ride> input)
         {
             var result = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
             var rides = input.ToList();
@@ -69,7 +101,7 @@ namespace hashcode_mad
             return result;
         }
 
-        public IEnumerable<Vehicle> Run2(IEnumerable<Ride> input)
+        private IEnumerable<Vehicle> Run2(IEnumerable<Ride> input)
         {
             var vehicles = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
             var rides = input.ToList();
@@ -91,6 +123,42 @@ namespace hashcode_mad
             }
             return vehicles;
         }
+
+        private IEnumerable<Vehicle> Run3(IEnumerable<Ride> input)
+        {
+            var vehicles = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
+            var rides = input.ToList();
+
+            foreach (var ride in rides)
+            {
+                // Sort the vehicles by closest to this ride.
+                var bestVehicles = vehicles.OrderBy(v => v.GetDistance(ride));
+                var bestVehicle = (Vehicle)null;
+                var bestScore = 0;
+
+                foreach (var vehicle in bestVehicles)
+                {
+                    var distance = vehicle.GetDistance(ride);
+                    var total = vehicle.CurrentStep + (distance + ride.Distance);
+                    if (total >= ride.End)
+                        continue;
+
+                    var score = vehicle.ScoreAndBonus(ride);
+                    if (score > bestScore)
+                    {
+                        bestVehicle = vehicle;
+                        bestScore = score;
+                    }
+                }
+
+                if (bestVehicle != null)
+                {
+                    bestVehicle.AssignRide(ride);
+                }
+            }
+            return vehicles;
+        }
+
 
         public override string ToString()
         {

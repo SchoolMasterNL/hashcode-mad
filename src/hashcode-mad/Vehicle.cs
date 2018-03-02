@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace hashcode_mad
 {
@@ -34,16 +33,11 @@ namespace hashcode_mad
 
         public void AssignRide(Ride ride)
         {
-            this.addedSteps += GetDistance(ride);
+            (var score, var bonus, var extraSteps) = Calculate(ride);
 
-            if (CurrentStep <= ride.Start)
-            {
-                this.addedSteps += ride.Start - CurrentStep;
-
-                Bonus += bonus;
-            }
-
-            Score += ride.Distance;
+            Score += score;
+            Bonus += bonus;
+            addedSteps += extraSteps;
 
             rides.Add(ride);
         }
@@ -61,6 +55,13 @@ namespace hashcode_mad
             return Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
         }
 
+        public int ScoreAndBonus(Ride ride)
+        {
+            (var score, var bonus, var extraSteps) = Calculate(ride);
+
+            return score + bonus;
+        }
+
         private (int x, int y) Position()
         {
             if (rides.Count == 0)
@@ -70,6 +71,22 @@ namespace hashcode_mad
 
             var lastRide = rides[rides.Count - 1];
             return (lastRide.EndX, lastRide.EndY);
+        }
+
+        private (int score, int bonus, int extraSteps) Calculate(Ride ride)
+        {
+            int score = ride.Distance;
+            int extraSteps = GetDistance(ride);
+            int bonus = 0;
+
+            int start = CurrentStep + extraSteps;
+            if (start <= ride.Start)
+            {
+                bonus = this.bonus;
+                extraSteps += ride.Start - start;
+            }
+
+            return (score, bonus, extraSteps);
         }
     }
 }
