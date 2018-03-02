@@ -69,7 +69,7 @@ namespace hashcode_mad
             return CurrentStep + GetDistance(ride) + ride.Distance < ride.End;
         }
 
-        public int RideScore(Ride ride)
+        public int GetRideScore(Ride ride)
         {
             var earliestStart = CurrentStep + GetDistance(ride);
             var score = ride.Start - earliestStart;

@@ -165,7 +165,7 @@ namespace hashcode_mad
                 if (vehicles.Count() == 0)
                     continue;
 
-                var bestVehicle = vehicles.OrderBy(_ => _.RideScore(ride)).First();
+                var bestVehicle = vehicles.OrderBy(_ => _.GetRideScore(ride)).First();
                 bestVehicle.AssignRide(ride);
             }
 
@@ -186,7 +186,7 @@ namespace hashcode_mad
                     if (vehicleRides.Count() == 0)
                         continue;
 
-                    var bestRide = vehicleRides.OrderBy(_ => vehicle.RideScore(_)).First();
+                    var bestRide = vehicleRides.OrderBy(_ => vehicle.GetRideScore(_)).First();
                     vehicle.AssignRide(bestRide);
                     rides.Remove(bestRide);
                     done = false;
