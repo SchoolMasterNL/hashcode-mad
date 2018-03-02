@@ -14,11 +14,12 @@ namespace hashcode_mad
         public Vehicle(int id, int bonus)
         {
             Id = id;
+            this.bonus = bonus;
             rides = new List<Ride>();
 
             addedSteps = 0;
-            this.bonus = bonus;
             Score = 0;
+            Bonus = 0;
         }
 
         public IEnumerable<Ride> Rides => rides;
@@ -27,7 +28,9 @@ namespace hashcode_mad
 
         public int CurrentStep => rides.Sum(r => r.Distance) + addedSteps;
 
-        public int Score { get; set; }
+        public int Score { get; private set; }
+
+        public int Bonus { get; private set; }
 
         public void AssignRide(Ride ride)
         {
@@ -37,7 +40,7 @@ namespace hashcode_mad
             {
                 this.addedSteps += ride.Start - CurrentStep;
 
-                Score += bonus;
+                Bonus += bonus;
             }
 
             Score += ride.Distance;
@@ -48,14 +51,14 @@ namespace hashcode_mad
         public override string ToString()
         {
             (int x, int y) = Position();
-            return $"Id: {Id}, PosX: {x}, PosY: {y}, CurrentStep: {CurrentStep}, Score: {Score}";
+            return $"Id: {Id}, PosX: {x}, PosY: {y}, CurrentStep: {CurrentStep}, Score: {Score}, Bonus {Bonus}, Total: {Score + Bonus}";
         }
 
         public int GetDistance(Ride ride)
         {
             (int x, int y) = Position();
 
-            return Math.Abs(x + ride.StartX) + Math.Abs(y + ride.StartY);
+            return Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
         }
 
         private (int x, int y) Position()
