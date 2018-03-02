@@ -71,8 +71,8 @@ namespace hashcode_mad
 
         public int RideScore(Ride ride)
         {
-            var stepTillRide = CurrentStep + GetDistance(ride);
-            var score = ride.Start - stepTillRide;
+            var earliestStart = CurrentStep + GetDistance(ride);
+            var score = ride.Start - earliestStart;
 
             if (score == 0)
                 return score;
