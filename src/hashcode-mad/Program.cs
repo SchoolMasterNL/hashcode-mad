@@ -11,6 +11,7 @@ namespace hashcode_mad
 
         static void Main(string[] args)
         {
+            int total = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
                 var vehicles1 = ParseInput(i, 1);
@@ -23,15 +24,22 @@ namespace hashcode_mad
                 Console.WriteLine($"Score2: {score2}");
 
                 List<Vehicle> vehicles = null;
-                if (vehicles1.Sum(v => v.Score) > vehicles2.Sum(v => v.Score))
+                if (score1 > vehicles2.Sum(v => v.Score))
+                {
                     vehicles = vehicles1;
+                    total += score1;
+                }
                 else
+                {
                     vehicles = vehicles2;
+                    total += score2;
+                }
 
                 var outputBuilder = new OutputBuilder(vehicles);
                 outputBuilder.Build(@"output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
             }
 
+            Console.WriteLine($"{total:n0}");
             Console.Read();
         }
 

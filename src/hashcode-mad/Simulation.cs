@@ -34,14 +34,13 @@ namespace hashcode_mad
 
             foreach (var vehicle in result)
             {
-                var currentStep = 0;
                 foreach (var ride in rides)
                 {
                     var bestRide = (Ride)null;
 
                     // Can we finish in time?
                     var totalTime = vehicle.GetDistance(ride) + ride.Distance;
-                    if ((totalTime + currentStep) >= ride.End)
+                    if ((totalTime + vehicle.CurrentStep) >= ride.End)
                     {
                         continue;
                     }
@@ -54,7 +53,7 @@ namespace hashcode_mad
                     else if (ride.Distance == bestRide.Distance)
                     {
                         // Can we start in time?
-                        if ((currentStep + vehicle.GetDistance(ride)) == ride.Start)
+                        if ((vehicle.CurrentStep + vehicle.GetDistance(ride)) == ride.Start)
                         {
                             // We can make it in time! Bonus points
                             bestRide = ride;
@@ -62,7 +61,6 @@ namespace hashcode_mad
                     }
 
                     vehicle.AssignRide(bestRide);
-                    currentStep += totalTime;
                 }
 
                 rides = rides.Except(vehicle.Rides).ToList();
