@@ -14,17 +14,27 @@ namespace hashcode_mad
             int total = 0;
             for (int i = 0; i < inputs.Length; i++)
             {
-                var vehicles1 = ParseInput(i, 1);
+                var lines = File.ReadAllLines(inputs[i]);
+
+                var simulation = GetSimulation(lines);
+
+                Console.WriteLine(simulation);
+
+                var rides1 = GetRides(lines);
+                var vehicles1 = simulation.Run1(rides1).ToList();
                 var score1 = vehicles1.Sum(v => v.Score);
+                var bonus1 = vehicles1.Sum(v => v.Bonus);
 
-                var vehicles2 = ParseInput(i, 2);
+                var rides2 = GetRides(lines);
+                var vehicles2 = simulation.Run2(rides2).ToList();
                 var score2 = vehicles2.Sum(v => v.Score);
+                var bonus2 = vehicles2.Sum(v => v.Bonus);
 
-                Console.WriteLine($"Score1: {score1}");
-                Console.WriteLine($"Score2: {score2}");
+                Console.WriteLine($"Run1= Score: {score1}, Bonus {bonus1}, Total: {score1 + bonus1}");
+                Console.WriteLine($"Run2= Score: {score2}, Bonus {bonus2}, Total: {score2 + bonus2}");
 
                 List<Vehicle> vehicles = null;
-                if (score1 > vehicles2.Sum(v => v.Score))
+                if (score1 + bonus1 > score2 + bonus2)
                 {
                     vehicles = vehicles1;
                     total += score1;
@@ -37,25 +47,12 @@ namespace hashcode_mad
 
                 var outputBuilder = new OutputBuilder(vehicles);
                 outputBuilder.Build(@"output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
+
+                Console.WriteLine();
             }
 
             Console.WriteLine($"{total:n0}");
             Console.Read();
-        }
-
-        private static List<Vehicle> ParseInput(int index, int run)
-        {
-            var lines = File.ReadAllLines(inputs[index]);
-
-            var simulation = GetSimulation(lines);
-
-            Console.WriteLine(simulation);
-
-            var rides = GetRides(lines);
-            if (run == 1)
-                return simulation.Run1(rides).ToList();
-            else
-                return simulation.Run2(rides).ToList();
         }
 
         private static Simulation GetSimulation(string[] lines)
