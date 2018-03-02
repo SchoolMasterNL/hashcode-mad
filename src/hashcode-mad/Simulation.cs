@@ -179,7 +179,7 @@ namespace hashcode_mad
 
             while (rides.Count > 0)
             {
-                var assigned = false;
+                var done = true;
                 foreach (var vehicle in result)
                 {
                     var vehicleRides = rides.Where(_ => vehicle.CanFinish(_));
@@ -189,10 +189,10 @@ namespace hashcode_mad
                     var bestRide = vehicleRides.OrderBy(_ => vehicle.RideScore(_)).First();
                     vehicle.AssignRide(bestRide);
                     rides.Remove(bestRide);
-                    assigned = true;
+                    done = false;
                 }
 
-                if (!assigned)
+                if (done)
                     break;
             }
 
