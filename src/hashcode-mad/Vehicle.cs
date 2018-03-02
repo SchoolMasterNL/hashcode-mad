@@ -25,7 +25,7 @@ namespace hashcode_mad
 
         public int Id { get; }
 
-        public int CurrentStep => rides.Sum(r => r.Distance) + addedSteps;
+        public int CurrentStep { get; private set; }
 
         public int Score { get; private set; }
 
@@ -40,6 +40,8 @@ namespace hashcode_mad
             addedSteps += extraSteps;
 
             rides.Add(ride);
+
+            CurrentStep = rides.Sum(r => r.Distance) + addedSteps;
         }
 
         public override string ToString()
