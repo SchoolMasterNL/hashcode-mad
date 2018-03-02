@@ -33,7 +33,7 @@ namespace hashcode_mad
         {
             this.addedSteps += GetDistance(ride);
 
-            if (CurrentStep  <= ride.Start)
+            if (CurrentStep <= ride.Start)
             {
                 this.addedSteps += ride.Start - CurrentStep;
 
@@ -45,19 +45,28 @@ namespace hashcode_mad
             rides.Add(ride);
         }
 
+        public override string ToString()
+        {
+            (int x, int y) = Position();
+            return $"Id: {Id}, PosX: {x}, PosY: {y}, CurrentStep: {CurrentStep}, Score: {Score}";
+        }
+
         public int GetDistance(Ride ride)
         {
-            int x = 0;
-            int y = 0;
-
-            if (rides.Count > 0)
-            {
-                var lastRide = rides[rides.Count - 1];
-                x = lastRide.EndX;
-                y = lastRide.EndY;
-            }
+            (int x, int y) = Position();
 
             return Math.Abs(x + ride.StartX) + Math.Abs(y + ride.StartY);
+        }
+
+        private (int x, int y) Position()
+        {
+            if (rides.Count == 0)
+            {
+                return (0, 0);
+            }
+
+            var lastRide = rides[rides.Count - 1];
+            return (lastRide.EndX, lastRide.EndY);
         }
     }
 }
