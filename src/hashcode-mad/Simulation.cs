@@ -70,12 +70,8 @@ namespace hashcode_mad
                 {
                     var bestRide = (Ride)null;
 
-                    // Can we finish in time?
-                    var totalTime = vehicle.GetDistance(ride) + ride.Distance;
-                    if ((totalTime + vehicle.CurrentStep) >= ride.End)
-                    {
+                    if (!vehicle.CanFinish(ride))
                         continue;
-                    }
 
                     // Longer ride?
                     if (bestRide == null || ride.Distance > bestRide.Distance)
@@ -112,8 +108,7 @@ namespace hashcode_mad
                 var bestVehicles = vehicles.OrderBy(v => v.GetDistance(ride));
                 foreach (var vehicle in bestVehicles)
                 {
-                    int total = vehicle.CurrentStep + (vehicle.GetDistance(ride) + ride.Distance);
-                    if (total >= ride.End)
+                    if (!vehicle.CanFinish(ride))
                         continue;
 
                     vehicle.AssignRide(ride);
@@ -138,12 +133,10 @@ namespace hashcode_mad
 
                 foreach (var vehicle in bestVehicles)
                 {
-                    var distance = vehicle.GetDistance(ride);
-                    var total = vehicle.CurrentStep + (distance + ride.Distance);
-                    if (total >= ride.End)
+                    if (!vehicle.CanFinish(ride))
                         continue;
 
-                    var score = vehicle.ScoreAndBonus(ride);
+                    var score = vehicle.GetScoreAndBonus(ride);
                     if (score > bestScore)
                     {
                         bestVehicle = vehicle;
@@ -158,7 +151,6 @@ namespace hashcode_mad
             }
             return vehicles;
         }
-
 
         public override string ToString()
         {

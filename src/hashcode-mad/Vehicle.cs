@@ -55,11 +55,16 @@ namespace hashcode_mad
             return Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
         }
 
-        public int ScoreAndBonus(Ride ride)
+        public int GetScoreAndBonus(Ride ride)
         {
             (var score, var bonus, var extraSteps) = Calculate(ride);
 
             return score + bonus;
+        }
+
+        public bool CanFinish(Ride ride)
+        {
+            return CurrentStep + GetDistance(ride) + ride.Distance < ride.End;
         }
 
         private (int x, int y) Position()
