@@ -35,7 +35,7 @@ namespace hashcode_mad
 
         public override string ToString()
         {
-            return $"Id: {Id}, StartX: {StartX}, StartY: {StartY}, EndX: {EndX}, EndY: {EndY}, Start: {Start}, End: {End}";
+            return $"Id: {Id}, StartX: {StartX}, StartY: {StartY}, EndX: {EndX}, EndY: {EndY}, Start: {Start}, End: {End}, Distance: {Distance}";
         }
 
         private int GetManhattanDistance(int startX, int endX, int startY, int endY)

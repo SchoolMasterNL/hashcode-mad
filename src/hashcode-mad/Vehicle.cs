@@ -9,6 +9,8 @@ namespace hashcode_mad
         private List<Ride> rides;
         private int addedSteps;
         private int bonus;
+        private Dictionary<int, int> distanceCache;
+        private Dictionary<int, int> scoreCache;
 
         public Vehicle(int id, int bonus)
         {
@@ -19,6 +21,9 @@ namespace hashcode_mad
             addedSteps = 0;
             Score = 0;
             Bonus = 0;
+
+            distanceCache = new Dictionary<int, int>();
+            scoreCache = new Dictionary<int, int>();
         }
 
         public IEnumerable<Ride> Rides => rides;
@@ -42,6 +47,9 @@ namespace hashcode_mad
             rides.Add(ride);
 
             CurrentStep = rides.Sum(r => r.Distance) + addedSteps;
+
+            scoreCache.Clear();
+            distanceCache.Clear();
         }
 
         public override string ToString()
@@ -52,9 +60,14 @@ namespace hashcode_mad
 
         public int GetDistance(Ride ride)
         {
-            (int x, int y) = Position();
+            if (!distanceCache.ContainsKey(ride.Id))
+            {
+                (int x, int y) = Position();
 
-            return Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
+                distanceCache[ride.Id] = Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
+            }
+
+            return distanceCache[ride.Id];
         }
 
         public int GetScoreAndBonus(Ride ride)
@@ -75,12 +88,33 @@ namespace hashcode_mad
             var score = ride.Start - earliestStart;
 
             if (score == 0)
-                return score;
+                return bonus;
 
             if (score < 0)
                 return bonus - score;
 
             return score;
+        }
+
+        public int GetRideScore2(Ride ride)
+        {
+            if (!scoreCache.ContainsKey(ride.Id))
+            {
+                var earliestStart = CurrentStep + GetDistance(ride);
+                var score = ride.Start - earliestStart;
+                var extra = ride.Distance;
+
+                if (score == 0) // exact on time
+                    score = bonus + extra;
+                else if (score >= 0) // earlier
+                    score = (bonus - score) + extra;
+                else // late
+                    score = score + extra;
+
+                scoreCache[ride.Id] = score;
+            }
+
+            return scoreCache[ride.Id];
         }
 
         private (int x, int y) Position()

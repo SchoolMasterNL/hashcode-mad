@@ -20,8 +20,10 @@ namespace hashcode_mad
 
                 Console.WriteLine(simulation);
 
-                var rides1 = GetRides(lines);
-                (var vehicles, var total) = simulation.Run(rides1);
+                var rides = GetRides(lines);
+                var max = rides.Sum(_ => _.Distance + simulation.Bonus);
+                Console.WriteLine($"Max: {max}");
+                (var vehicles, var total) = simulation.Run(rides);
 
                 grandTotal += total;
 
