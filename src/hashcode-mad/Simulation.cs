@@ -39,6 +39,7 @@ namespace hashcode_mad
                 Run5,
                 Run6,
                 Run7,
+                Run8,
             };
 
             var bestVehicles = (IEnumerable<Vehicle>)null;
@@ -242,6 +243,26 @@ namespace hashcode_mad
                     rides.Remove(ride);
 
                     ride = rides.Where(_ => vehicle.CanFinish(_)).OrderByDescending(_ => vehicle.GetRideScore2(_)).FirstOrDefault();
+                }
+            }
+
+            return vehicles;
+        }
+
+        private IEnumerable<Vehicle> Run8(IEnumerable<Ride> input)
+        {
+            var vehicles = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
+            var rides = input.OrderBy(_ => _.Start).ToList();
+
+            foreach (var vehicle in vehicles)
+            {
+                var ride = rides.Where(_ => vehicle.CanFinish(_)).OrderByDescending(_ => (Steps - _.Start) + vehicle.GetRideScore2(_)).FirstOrDefault();
+                while (ride != null)
+                {
+                    vehicle.AssignRide(ride);
+                    rides.Remove(ride);
+
+                    ride = rides.Where(_ => vehicle.CanFinish(_)).OrderByDescending(_ => (Steps - _.Start) + vehicle.GetRideScore2(_)).FirstOrDefault();
                 }
             }
 
