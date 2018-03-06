@@ -117,6 +117,27 @@ namespace hashcode_mad
             return scoreCache[ride.Id];
         }
 
+        public int GetRideScore3(Ride ride)
+        {
+            if (!scoreCache.ContainsKey(ride.Id))
+            {
+                var earliestStart = CurrentStep + GetDistance(ride);
+                var score = ride.Start - earliestStart;
+                var extra = 0;
+
+                if (score == 0) // exact on time
+                    score = bonus + extra;
+                else if (score >= 0) // earlier
+                    score = (bonus - score) + extra;
+                else // late
+                    score = score + extra;
+
+                scoreCache[ride.Id] = score;
+            }
+
+            return scoreCache[ride.Id];
+        }
+
         private (int x, int y) Position()
         {
             if (rides.Count == 0)

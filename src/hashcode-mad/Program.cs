@@ -28,7 +28,7 @@ namespace hashcode_mad
                 grandTotal += total;
 
                 var outputBuilder = new OutputBuilder(vehicles);
-                outputBuilder.Build(@"output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
+                outputBuilder.Build(@"..\..\..\output\" + Path.GetFileName(inputs[i]).Replace(".in", ".out"));
 
                 Console.WriteLine();
             }
