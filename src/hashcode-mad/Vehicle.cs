@@ -36,6 +36,8 @@ namespace hashcode_mad
 
         public int Bonus { get; private set; }
 
+        public int TotalScore => Score + Bonus;
+
         public void AssignRide(Ride ride)
         {
             (var score, var bonus, var extraSteps) = Calculate(ride);
@@ -52,6 +54,17 @@ namespace hashcode_mad
             distanceCache.Clear();
         }
 
+        public void AssignRide2(Ride ride)
+        {
+            if (!CanFinish(ride))
+            {
+                var test = CanFinish(ride);
+                throw new InvalidOperationException();
+            }
+
+            AssignRide(ride);
+        }
+
         public override string ToString()
         {
             (int x, int y) = Position();
@@ -64,7 +77,7 @@ namespace hashcode_mad
             {
                 (int x, int y) = Position();
 
-                distanceCache[ride.Id] = Math.Abs(x - ride.StartX) + Math.Abs(y - ride.StartY);
+                distanceCache[ride.Id] = Manhattan.Distance(x, y, ride.StartX, ride.StartY);
             }
 
             return distanceCache[ride.Id];

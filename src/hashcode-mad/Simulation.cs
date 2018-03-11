@@ -40,7 +40,7 @@ namespace hashcode_mad
                 Run6,
                 Run7,
                 Run8,
-                Run9
+                Run9,
             };
 
             var bestVehicles = (IEnumerable<Vehicle>)null;
@@ -48,14 +48,16 @@ namespace hashcode_mad
 
             for (int i = 0; i < runs.Length; i++)
             {
-                var vehicles = runs[i](input);
+                var rides = input.ToList();
+                var vehicles = runs[i](rides);
 
                 var score = vehicles.Sum(v => v.Score);
                 var bonus = vehicles.Sum(v => v.Bonus);
+                var remaining = rides.Count - vehicles.Sum(v => v.Rides.Count());
                 var total = score + bonus;
 
-                Console.WriteLine($"Run{i + 1}= Score: {score}, Bonus {bonus}, Total: {total}");
-                if (total > bestTotal)
+                Console.WriteLine($"Run{i + 1}= Score: {score:n0}, Bonus {bonus:n0}, Total: {total:n0}, Remaining: {remaining}");
+                if (total >= bestTotal)
                 {
                     bestVehicles = vehicles;
                     bestTotal = total;
@@ -272,34 +274,105 @@ namespace hashcode_mad
 
         private IEnumerable<Vehicle> Run9(IEnumerable<Ride> input)
         {
-            var vehicles = Enumerable.Range(0, this.Vehicles).Select(index => new Vehicle(index, this.Bonus)).ToList();
-            var rides = input.OrderBy(_ => _.Start).ToList();
-
-
-            while (rides.Count > 0)
+            List<Vehicle> TryReverseRides(int count)
             {
-                var done = true;
-                foreach (var vehicle in vehicles)
+                var result = new List<Vehicle>();
+                var rides = input.ToList();
+
+                var startAtEnd = count;
+
+                var reverseVehicles = Enumerable.Range(0, startAtEnd).Select(index => new ReverseVehicle(index, this.Bonus)).ToList();
+                var vehicles = Enumerable.Range(0, Vehicles - startAtEnd).Select(index => new Vehicle(index + startAtEnd, this.Bonus)).ToList();
+
+                var bestEnds = rides.OrderByDescending(_ => _.End + _.Distance).ToList();
+
+                var offset = 0;
+                foreach (var reverseVehicle in reverseVehicles)
                 {
-                    var ride = rides.Where(_ => vehicle.CanFinish(_)).OrderByDescending(_ => (Steps - _.Start) + vehicle.GetRideScore3(_)).FirstOrDefault();
-                    if (ride != null)
+                    while (offset < bestEnds.Count)
                     {
-                        vehicle.AssignRide(ride);
-                        rides.Remove(ride);
-                        done = false;
+                        var ride = bestEnds[offset];
+
+                        if (ride.GetDistance(0, 0) + ride.Distance < ride.End)
+                            break;
+
+                        offset++;
                     }
+
+                    if (offset == bestEnds.Count)
+                        break;
+
+                    reverseVehicle.SetEnd(bestEnds[offset]);
+
+                    rides.Remove(bestEnds[offset]);
+
+                    offset++;
                 }
 
-                if (done)
-                    break;
+                if (reverseVehicles.Any(_ => _.CurrentStep == 0))
+                    throw new NotImplementedException();
+
+                while (rides.Count > 0)
+                {
+                    var done = true;
+
+                    foreach (var reverseVehicle in reverseVehicles)
+                    {
+                        var ride = rides.Where(_ => reverseVehicle.CanStart(_)).OrderByDescending(_ => _.End + _.Distance).FirstOrDefault();
+                        while (ride != null)
+                        {
+                            reverseVehicle.AssignRide(ride);
+                            rides.Remove(ride);
+                            done = false;
+                            ride = rides.Where(_ => reverseVehicle.CanStart(_)).OrderByDescending(_ => _.End + _.Distance).FirstOrDefault();
+                        }
+                    }
+
+                    if (done)
+                        break;
+                }
+
+                while (rides.Count > 0)
+                {
+                    var done = true;
+
+                    foreach (var vehicle in vehicles)
+                    {
+                        var ride = rides.Where(_ => vehicle.CanFinish(_)).OrderByDescending(_ => (Steps - _.Start) + vehicle.GetRideScore3(_)).FirstOrDefault();
+                        if (ride != null)
+                        {
+                            vehicle.AssignRide(ride);
+                            rides.Remove(ride);
+                            done = false;
+                        }
+                    }
+
+                    if (done)
+                        break;
+                }
+
+                return reverseVehicles.Select(_ => _.ToVehicle()).Concat(vehicles).ToList();
             }
 
-            return vehicles;
+            var bestVehicles = TryReverseRides(Vehicles);
+
+            var max = Math.Max(Vehicles * 0.02, 1.0);
+            for (int i = 0; i < max; i++)
+            {
+                var vehicles = TryReverseRides(i);
+                var score = vehicles.Sum(v => v.TotalScore);
+
+                var bestScore = bestVehicles.Sum(v => v.TotalScore);
+                if (score > bestScore)
+                    bestVehicles = vehicles;
+            }
+
+            return bestVehicles;
         }
 
         public override string ToString()
         {
-            return $"Rows: {Rows}, Columns: {Columns}, Vehicles: {Vehicles}, Rides: {Rides}, Bonus: {Bonus}, Steps: {Steps}";
+            return $"Rows: {Rows:n0}, Columns: {Columns:n0}, Vehicles: {Vehicles:n0}, Rides: {Rides:n0}, Bonus: {Bonus:n0}, Steps: {Steps:n0}";
         }
     }
 }

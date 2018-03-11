@@ -14,7 +14,7 @@ namespace hashcode_mad
             this.Start = start;
             this.End = end;
 
-            this.Distance = this.GetManhattanDistance(this.StartX, this.EndX, this.StartY, this.EndY);
+            this.Distance = Manhattan.Distance(this.StartX, this.StartY, this.EndX, this.EndY);
         }
 
         public int Id { get; }
@@ -33,14 +33,14 @@ namespace hashcode_mad
 
         public int Distance { get; }
 
+        public int GetDistance(int x, int y)
+        {
+            return Manhattan.Distance(StartX, StartY, x, y);
+        }
+
         public override string ToString()
         {
             return $"Id: {Id}, StartX: {StartX}, StartY: {StartY}, EndX: {EndX}, EndY: {EndY}, Start: {Start}, End: {End}, Distance: {Distance}";
-        }
-
-        private int GetManhattanDistance(int startX, int endX, int startY, int endY)
-        {
-            return Math.Abs(startX - endX) + Math.Abs(startY - endY);
         }
     }
 }
